@@ -1,0 +1,44 @@
+version: "2"
+services:
+  psono-server:
+    container_name: psono-quickstart-psono-server
+    restart: always
+    image: psono/psono-server-enterprise:latest
+    command: >
+      sh -c "sleep 10 && python3 psono/manage.py migrate
+      && python3 psono/manage.py createuser admin@${PSONO_USERDOMAIN} admin admin@example.com
+      && python3 psono/manage.py promoteuser admin@${PSONO_USERDOMAIN} superuser
+      && /bin/sh /root/configs/docker/cmd.sh"
+    volumes:
+      - ./config/settings.yaml:/root/.psono_server/settings.yaml
+    ports:
+      - "10100:80"
+
+  psono-client:
+    container_name: psono_client
+    restart: always
+    image: psono/psono-client:latest
+    volumes:
+      - ./config/client/config.json:/usr/share/nginx/html/config.json
+      - ./data/html/privacy-policy-content.html:/usr/share/nginx/html/privacy-policy-content.html
+    ports:
+      - "10101:80"
+
+  psono_admin_client:
+    container_name: psono_admin_client
+    restart: always
+    image: psono/psono-admin-client:latest
+    volumes:
+      - ./config/client/config.json:/usr/share/nginx/html/portal/config.json
+    ports:
+      - "10102:80"
+
+  db:
+    image: postgres:12
+    environment:
+      POSTGRES_USER: psono
+      POSTGRES_PASSWORD: psono
+    volumes:
+      - ./data/postgresql:/var/lib/postgresql/data
+    ports:
+      - "5433:5432"

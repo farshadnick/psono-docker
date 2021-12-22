@@ -1,0 +1,13 @@
+{
+    "backend_servers": [{
+      "title": "Psono.pw",
+      "url": "http://192.168.10.53:10100"
+    }],
+    "base_url": "http://192.168.10.53:10100",
+    "allow_custom_server": true,
+    "allow_registration": true,
+    "allow_lost_password": true,
+    "disable_download_bar": false,
+    "authentication_methods": ["AUTHKEY"],
+    "saml_provider": []
+  }
